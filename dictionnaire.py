@@ -35,6 +35,13 @@ class Dictionnaire:
         del self.dico[key]
 
 
+    def check(self, cle):
+        self.cle = cle
+        if self.dico in self.dico:
+            print("OUI ")
+        else:
+            print("NON")
+
 
 
 d1 = Dictionnaire()
@@ -46,5 +53,7 @@ print(d1)
 del d1["bazard"]
 print(d1)
 d1["avion"] = "A380"
-print(d1["avion"])
+print(d1)
 
+d1["bateau"] = "zodiac"
+print(d1)
