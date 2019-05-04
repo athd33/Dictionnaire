@@ -74,13 +74,14 @@ class Dictionnaire:
 
 
 
-
-
+####################### TESTS DE LA CLASSE #######################################
 
 d1 = Dictionnaire()
 print(d1)
 
-ex = {"voiture": "clio", "avion" : "mirage", "bazard" : "bordel"}
+ex = {"voiture": "clio", "avion" : "mirage", "commerce" : "bazard"}
+
+
 d1.remplir(ex)
 print(d1)
 del d1["bazard"]                #del possible grace à __delitem__
