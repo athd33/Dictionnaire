@@ -34,13 +34,9 @@ class Dictionnaire:
     def __delitem__(self, key): # méthode permettant d'utiliser del pour effacer un élément par sa clé
         del self.dico[key]
 
+    def __contains__(self, item): # permet de vérifier la présence de item dans le dictionnaire
+        return item in self.dico.keys()
 
-    def check(self, cle):
-        self.cle = cle
-        if self.dico in self.dico:
-            print("OUI ")
-        else:
-            print("NON")
 
 
 
@@ -57,3 +53,9 @@ print(d1)
 
 d1["bateau"] = "zodiac"
 print(d1)
+
+mot = "voitures"
+if mot in d1:
+    print("Le mot est dedans")
+else:
+    print("Le mot ne figure pas dans le dictionnaire")
