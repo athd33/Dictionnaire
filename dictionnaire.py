@@ -37,7 +37,8 @@ class Dictionnaire:
     def __contains__(self, item): # permet de vérifier la présence de item dans le dictionnaire
         return item in self.dico.keys()
 
-
+    def __len__(self):
+        return len(self.dico)
 
 
 d1 = Dictionnaire()
@@ -46,7 +47,7 @@ print(d1)
 ex = {"voiture": "clio", "avion" : "mirage", "bazard" : "bordel"}
 d1.remplir(ex)
 print(d1)
-del d1["bazard"]
+del d1["bazard"]                #del possible grace à __delitem__
 print(d1)
 d1["avion"] = "A380"
 print(d1)
@@ -55,7 +56,11 @@ d1["bateau"] = "zodiac"
 print(d1)
 
 mot = "voitures"
-if mot in d1:
+
+if mot in d1:       #methode spéciale __contains__ permet de parcourir pour vérifier si mot est dans d1
     print("Le mot est dedans")
 else:
     print("Le mot ne figure pas dans le dictionnaire")
+
+
+print(len(d1))
