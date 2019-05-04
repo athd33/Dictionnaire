@@ -23,6 +23,16 @@ class Dictionnaire:
         return f"dictionnaire  = {self.dico}"
 
 
+    def __getitem__(self, cle): # méthode spéciale permettant de récupérer la valeur de l'indice dans le dictionnaire
+        return self.dico[cle]
+
+
+
+
+
+
+
+
 
 d1 = Dictionnaire()
 print(d1)
@@ -30,4 +40,5 @@ print(d1)
 ex = {"voiture": "clio", "avion" : "mirage"}
 
 d1.remplir(ex)
-print(d1)
+print(d1["avion"])
+
