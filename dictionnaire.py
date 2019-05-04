@@ -27,9 +27,12 @@ class Dictionnaire:
         return self.dico[cle]
 
 
+    def __setitem__(self, key, value):  # méthode permettant de modifier la valeur d'une clé
+        self.dico[key] = value
+        return self.dico[key]
 
-
-
+    def __delitem__(self, key): # méthode permettant d'utiliser del pour effacer un élément par sa clé
+        del self.dico[key]
 
 
 
@@ -37,8 +40,11 @@ class Dictionnaire:
 d1 = Dictionnaire()
 print(d1)
 
-ex = {"voiture": "clio", "avion" : "mirage"}
-
+ex = {"voiture": "clio", "avion" : "mirage", "bazard" : "bordel"}
 d1.remplir(ex)
+print(d1)
+del d1["bazard"]
+print(d1)
+d1["avion"] = "A380"
 print(d1["avion"])
 
