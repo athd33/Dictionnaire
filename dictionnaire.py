@@ -40,7 +40,7 @@ class Dictionnaire:
         return item in self.dico.keys()
 
 
-    def __len__(self):
+    def __len__(self):          # permet de récupérer la longeur avec la fonction len()
         return len(self.dico)
 
 
@@ -55,12 +55,21 @@ class Dictionnaire:
         print((sorted(self.dico.items(), key=lambda t:t[0], reverse=True)))
 
 
+    def item(self):         # fonction qui retourne les clés et valeurs de l'objet
+        d = self.dico
+        for cle, valeur in d.items():
+            print(f"{cle}:{valeur}")
 
 
+    def keys(self):         # fonction qui retourne uniquement les clés de l'objet
+        d = self.dico
+        for cle in d.keys():
+            print(cle)
 
-
-
-
+    def values(self):       # fonction qui retourne uniquement les valeurs de l'objet
+        d = self.dico
+        for value in d.values():
+            print(value)
 
 
 
@@ -93,3 +102,6 @@ print(d1)
 
 d1.sort_function()
 d1.sort_revers_function()
+d1.keys()
+d1.values()
+d1.item()
