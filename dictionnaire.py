@@ -18,9 +18,9 @@ class Dictionnaire:
         self.dico = dict(self.ajout)    #dict précise à python qu'il s'agit d'un dictionnaire
 
 
-    def __str__(self):
+    def __repr__(self):
         """méthode de classe permettant d'afficher le retour avec print() de facon lisible"""
-        return f"dictionnaire  = {self.dico}"
+        return f"{self.dico}"
 
 
     def __getitem__(self, cle): # méthode spéciale permettant de récupérer la valeur de l'indice dans le dictionnaire
@@ -31,14 +31,41 @@ class Dictionnaire:
         self.dico[key] = value
         return self.dico[key]
 
+
     def __delitem__(self, key): # méthode permettant d'utiliser del pour effacer un élément par sa clé
         del self.dico[key]
+
 
     def __contains__(self, item): # permet de vérifier la présence de item dans le dictionnaire
         return item in self.dico.keys()
 
+
     def __len__(self):
         return len(self.dico)
+
+
+    def __str__(self):
+        return f"{self.dico}"
+
+    def sort_function(self):                                    #fonction pour afficher la liste triée par clé
+        print(sorted(self.dico.items(), key=lambda t:t[0]))     # correspond à l'incice de l'objet à utiliser pour référence du tri
+
+
+    def sort_revers_function(self):                             # fonction pour affichier la liste triée inversée
+        print((sorted(self.dico.items(), key=lambda t:t[0], reverse=True)))
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 d1 = Dictionnaire()
@@ -62,5 +89,7 @@ if mot in d1:       #methode spéciale __contains__ permet de parcourir pour vé
 else:
     print("Le mot ne figure pas dans le dictionnaire")
 
+print(d1)
 
-print(len(d1))
+d1.sort_function()
+d1.sort_revers_function()
