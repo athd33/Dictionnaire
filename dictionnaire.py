@@ -1,157 +1,184 @@
-#coding:utf-8
+# Exercice du dictionnaire ordonné - correction
+
 
 import time
 
-class Dictionnaire:
-    """classe, destinée à produire des objets conteneurs, des dictionnaires ordonnés."""
 
 
-    def __init__(self, param1="clé",param2 ="valeur" ):  # params sont optionnels, ils affichent "clé/valeur" par défaut dans le dico
-        """Initialisation du dictionnaire"""
-        self.param1 = param1
-        self.param2 = param2
-        self.dico = {param1:param2} # remplissage du dico initialisé avec les param prédéfinis
-
-
-    def remplir(self, ajout):
-        """Remplir le dictionnaire avec l'ajout spécifié"""
-        self.ajout = ajout
-        self.dico = dict(self.ajout)    #dict précise à python qu'il s'agit d'un dictionnaire
+class DictionnaireOrdonne:
+    """Création de la classe DictionnaireOrdonne"""
+    
+    def __init__(self, dicto={}, **donnees):                                    # instanciation
+        """Constructeur de l'objet, instanciation de la classe."""
+        
+        self.cles = []                                                         # création d'une liste vide pour les clés
+        self.valeurs = []                                                      # création d'une liste pour les valeurs
+        
+                                                                               # On vérifie que 'dicto' est de type dict()
+        if type(dicto) not in (dict, DictionnaireOrdonne):
+            raise TypeError("Attention, il doit s'agir d'un dictionnaire")
+        
+                                                                                # On récupère les données de 'dicto'
+        for cle in dicto:
+            self[cle] = dicto[cle]
+        
+                                                                                # On récupère les données de 'donnees'
+        for cle in donnees:
+            self[cle] = donnees[cle]
+    
 
 
     def __repr__(self):
-        """méthode de classe permettant d'afficher le retour avec print() de facon lisible"""
-        return f"{self.dico}"
-
-
-    def __getitem__(self, cle): # méthode spéciale permettant de récupérer la valeur de l'indice dans le dictionnaire
-        return self.dico[cle]
-
-
-    def __setitem__(self, key, value):  # méthode permettant de modifier la valeur d'une clé
-        self.dico[key] = value
-        return self.dico[key]
-
-
-    def __delitem__(self, key): # méthode permettant d'utiliser del pour effacer un élément par sa clé
-        del self.dico[key]
-
-
-    def __contains__(self, item): # permet de vérifier la présence de item dans le dictionnaire
-        return item in self.dico.keys()
-
-
-    def __len__(self):          # permet de récupérer la longeur avec la fonction len()
-        return len(self.dico)
-
-
+        """Représentation de notre objet. C'est cette chaîne qui sera affichée
+        quand on saisit directement le dictionnaire dans l'interpréteur, ou en
+        utilisant la fonction 'repr'"""
+        
+        chaine = "{"
+        premier_passage = True
+        for cle, valeur in self.items():
+            if not premier_passage:
+                chaine += ", " # On ajoute la virgule comme séparateur
+            else:
+                premier_passage = False
+            chaine += repr(cle) + ": " + repr(valeur)
+        chaine += "}"
+        return chaine
+    
     def __str__(self):
-        return f"{self.dico}"
+        """méthode spéciale pour pouvoir utiliser print"""        
+        return repr(self)
+    
+    def __len__(self):
+        """Pour utiliser len, et connaitre la taille de l'élément"""
+        return len(self.cles)
+    
+    def __contains__(self, cle):
+        """Pour vérifier si la clé est dans la l'objet"""
+        return cle in self.cles
+    
+    def __getitem__(self, cle):
+        """Renvoie la valeur correspondant à la clé si elle existe, lèveune exception KeyError sinon"""
+        
+        if cle not in self.cles:
+            raise KeyError( f"La clé {cle} ne se trouve pas dans le dictionnaire")
+        else:
+            indice = self.cles.index(cle)
+            return self.valeurs[indice]
+    
+    def __setitem__(self, cle, valeur):
+        """Méthode spéciale appelée quand on cherche à modifier une clé
+        présente dans le dictionnaire. Si la clé n'est pas présente, on l'ajoute
+        à la fin du dictionnaire"""
+        
+        if cle in self.cles:
+            indice = self.cles.index(cle)
+            self.valeurs[indice] = valeur
+        else:
+            self.cles.append(cle)
+            self.valeurs.append(valeur)
+    
+    def __delitem__(self, cle):
+        """Méthode appelée quand on souhaite supprimer une clé"""
+        if cle not in self.cles:
+            raise KeyError( f"La clé {cle} ne se trouve pas dans le dictionnaire")
+        else:
+            indice = self.cles.index(cle)
+            del self.cles[indice]
+            del self.valeurs[indice]
+    
+    def __iter__(self):
+        """Méthode de parcours de l'objet. On renvoie l'itérateur des clés"""
+        return iter(self.cles)
+    
+    def __add__(self, autre_objet):
+        """On renvoie un nouveau dictionnaire contenant les deux
+        dictionnaires mis bout à bout (d'abord self puis autre_objet)"""
+        
+        if type(autre_objet) is not type(self):
+            raise TypeError(f"Impossible de concaténer {type.self} et {type(autre_objet)}")
+        else:
+            nouveau = DictionnaireOrdonne()
+            
+            # On commence par copier self dans le dictionnaire
+            for cle, valeur in self.items():
+                nouveau[cle] = valeur
+            
+            # On copie ensuite autre_objet
+            for cle, valeur in autre_objet.items():
+                nouveau[cle] = valeur
+            return nouveau
+    
+    def items(self):
+        """Renvoie un générateur contenant les couples (cle, valeur)"""
+        for i, cle in enumerate(self.cles):
+            valeur = self.valeurs[i]
+            yield (cle, valeur)
+    
+    def keys(self):
+        """Cette méthode renvoie la liste des clés"""
+        return list(self.cles)
+    
+    def values(self):
+        """Cette méthode renvoie la liste des valeurs"""
+        return list(self.valeurs)
+    
+    def reverse(self):
+        """Inversion du dictionnaire"""
+        # On crée deux listes vides qui contiendront le nouvel ordre des clés
+        # et valeurs
+        cles = []
+        valeurs = []
+        for cle, valeur in self.items():
+            # On ajoute les clés et valeurs au début de la liste
+            cles.insert(0, cle)
+            valeurs.insert(0, valeur)
+        # On met ensuite à jour nos listes
+        self.cles = cles
+        self.valeurs = valeurs
+    
+    def sort(self):
+        """Méthode permettant de trier le dictionnaire en fonction de ses clés"""
+        # On trie les clés
+        cles_triees = sorted(self.cles)
+        # On crée une liste de valeurs, encore vide
+        valeurs = []
+        # On parcourt ensuite la liste des clés triées
+        for cle in cles_triees:
+            valeur = self[cle]
+            valeurs.append(valeur)
+        # Enfin, on met à jour notre liste de clés et de valeurs
+        self.cles = cles_triees
+        self.valeurs = valeurs
 
-    def sort_function(self):                                    #fonction pour afficher la liste triée par clé
-        print(sorted(self.dico.items(), key=lambda t:t[0]))     # correspond à l'incice de l'objet à utiliser pour référence du tri
 
-
-    def sort_revers_function(self):                             # fonction pour affichier la liste triée inversée
-        print((sorted(self.dico.items(), key=lambda t:t[0], reverse=True)))
-
-
-    def item(self):         # fonction qui retourne les clés et valeurs de l'objet
-        d = self.dico
-        for cle, valeur in d.items():
-            print(f"{cle}:{valeur}")
-
-
-    def keys(self):         # fonction qui retourne uniquement les clés de l'objet
-        d = self.dico
-        for cle in d.keys():
-            print(cle)
-
-    def values(self):       # fonction qui retourne uniquement les valeurs de l'objet
-        d = self.dico
-        for value in d.values():
-            print(value)
-
-
-    def add_dic(self, dictionnaire):
-        self.dictionnaire = dictionnaire
-        self.dico.update(dictionnaire)   # utilisation de la fonction update pour ajouter le dictionnaire à la suite
-        return self.dico
-
-
-
-def myprint(message):
+def myprint(mess):
     time.sleep(1)
-    print(message)
+    print(f"\n{mess}\n")
 
 
 
 
 
+        #################### TESTS DU DICTIONNAIRE ############################
+
+myprint("### Création d'un dictionnaire vide :")
+fruits = DictionnaireOrdonne()                                   # Instanciation d'un dictionnaire vide
+myprint(f"Le dictionnaire fruits a été créé : {type(fruits)}")
+
+fruits["pommes"] = 52
+fruits["poires"] = 34
+fruits["prunes"] = 128
+fruits["melons"] = 15
+
+myprint(fruits)                             
+
+fruits["bananes"] = 21                                          # Ajout d'un élément clé/valeur dans le dictionnaire
+
+myprint(fruits)
+
+print(fruits["melons"])                                         # les indices sont couplés, melons retourne 15
 
 
-
-
-
-####################### TESTS DE LA CLASSE #######################################
-myprint("Instanciation du dictionnaire 'd1'...")
-d1 = Dictionnaire()  # instanciation du dictionnaire d1
-
-
-myprint("affichage du dictionnaire instancié avec les valeurs par défaut : ")
-myprint(f"dictionnaire d1: {d1}")           # la méthode __ini__ a créé un dictionnaire avec les valeurs renseignées par défaut
-
-
-myprint("Création de deux dictionnaires : 'ex' et 'dicto' ")
-ex = {"voiture": "clio", "avion" : "mirage", "commerce" : "bazard"} # création d'un premier dictionnaire
-dicto = {"italie": "pizza", "inde": "riz", "france": "baguette" }   # création d'un second dictionnaire
-
-myprint("Remplissage de d1 avec le dictionnaire 'ex'")
-d1.remplir(ex)      #utilisation de la méthode remplir() destinée à remplir le dictionnaire instancié avec l'objet choisi dict() ici
-
-myprint("Controle du remplissage avec l'utilisation de la méthode spéciale __repr__ :")
-myprint(f"Dictionnaire d1 : {d1}")           #utilisation de la méthode spéciale __repr__ pour afficher l'objet de façon lisible avec print()
-
-myprint("Suppression d'une clé/valeur avec la méthode spéciale __delitem__ ('commerce'): ")
-del d1["commerce"]  #utilisation de la méthode __delitem__ qui permet d'effacer une clé avec sa valeur via la fonction del()
-
-myprint("Vérification de l'effacement de 'commerce' avec del :")
-print(d1)           # vérification de la destruction de "commerce" via del()
-
-myprint("Modificaion de la valeur d'avion avec 'A380' au lieu de 'mirage' :")
-d1["avion"] = "A380"    # ajout de clé / valeur
-print(d1)               # vérification
-
-myprint("Ajout de 'bateau' avec 'zodiac' :")
-d1["bateau"] = "zodiac" # ajout de clé / valeur
-print(d1)               # vérification
-
-mot = "voitures"
-
-myprint("Utilisation de la méthode spéciale __contains__ pour parcourir l'objet avec 'in' ")
-if mot in d1:       #utlisation de la méthode spéciale __contains__ permet de parcourir pour vérifier si mot est dans d1 avec "in"
-    print("Le mot est dedans")
-else:
-    print("Le mot ne figure pas dans le dictionnaire")
-
-
-myprint("Dictionnaire trié avec la méthode utilisant la fonction 'sorted', ordre alphabétique : ")
-d1.sort_function() # utilisation d'une méthode utilisant "sorted" pour afficher le dictionnaire trié par ordre alphabétique par clé [0]
-
-myprint("Dictionnaire trié avec la méthode utilisant la fonction 'sorted', ordre alphabétique inversé avec Reverse=True : ")
-d1.sort_revers_function() # utilisation d'une méthode de tri avec "sorted" et l'ajout de Reverse=True pour inverser l'ordre des résultats
-
-myprint("Utilisation de la méthode keys() créée pour retourner les clés de l'objet : ")
-d1.keys() # création d'une méthode keys() qui retourne les clés de l'objet
-
-myprint("Utilisation de la méthode values() créée pour retourner les valeurs de l'objet : ")
-d1.values() # création d'une méthode values() qui retourne les valeurs de l'objet
-
-myprint("Utilisation de la méthode item() créée pour retourner les clés et valeurs de l'objet : ")
-d1.item() # création de la fonction items qui retourne les clés et valeurs de l'objet
-
-myprint("Utilisation de la méthode add_dic() pour ajouter un dictionnaire à l'objet : ")
-d1.add_dic(dicto)  # création de la méthode add_dic() qui ajoute le dictionnaire à l'objet instancié
-
-myprint("Le dictionnaire d1 contient 'ex' et 'dicto' :")
-myprint(d1)
+del fruits["melons"]                                            
+myprint("Suppression des clés 'melons/ et sa valeur' avec del, possible grace a la méthode delitem :")   # la méthode spéciale delitem permet de supprimer clé/valeur grace à del
+myprint(fruits)
