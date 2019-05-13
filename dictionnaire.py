@@ -29,14 +29,12 @@ class DictionnaireOrdonne:
 
 
     def __repr__(self):
-        """Représentation de notre objet. C'est cette chaîne qui sera affichée
-        quand on saisit directement le dictionnaire dans l'interpréteur, ou en
-        utilisant la fonction 'repr'"""
+        """Représentation  de l'objet avec la méthode spéciale  'repr'"""
         
-        chaine = "{"
+        chaine = "{"            # initialisation de la chaine 
         premier_passage = True
         for cle, valeur in self.items():
-            if not premier_passage:
+            if not premier_passage: # condition permettant de placer la séparation
                 chaine += ", " # On ajoute la virgule comme séparateur
             else:
                 premier_passage = False
@@ -91,8 +89,7 @@ class DictionnaireOrdonne:
         return iter(self.cles)
     
     def __add__(self, autre_objet):
-        """On renvoie un nouveau dictionnaire contenant les deux
-        dictionnaires mis bout à bout (d'abord self puis autre_objet)"""
+        """Retourne deux dictionnaires, self en premier et 'l'ajouté' en second """
         
         if type(autre_objet) is not type(self):
             raise TypeError(f"Impossible de concaténer {type.self} et {type(autre_objet)}")
@@ -123,9 +120,7 @@ class DictionnaireOrdonne:
         return list(self.valeurs)
     
     def reverse(self):
-        """Inversion du dictionnaire"""
-        # On crée deux listes vides qui contiendront le nouvel ordre des clés
-        # et valeurs
+        """Tri inversé"""
         cles = []
         valeurs = []
         for cle, valeur in self.items():
@@ -137,15 +132,18 @@ class DictionnaireOrdonne:
         self.valeurs = valeurs
     
     def sort(self):
-        """Méthode permettant de trier le dictionnaire en fonction de ses clés"""
-        # On trie les clés
+        """Tri par clé"""
+        # Tri des clés par ordre alphabétique
         cles_triees = sorted(self.cles)
+
         # On crée une liste de valeurs, encore vide
         valeurs = []
+
         # On parcourt ensuite la liste des clés triées
         for cle in cles_triees:
             valeur = self[cle]
             valeurs.append(valeur)
+            
         # Enfin, on met à jour notre liste de clés et de valeurs
         self.cles = cles_triees
         self.valeurs = valeurs
@@ -182,3 +180,6 @@ print(fruits["melons"])                                         # les indices so
 del fruits["melons"]                                            
 myprint("Suppression des clés 'melons/ et sa valeur' avec del, possible grace a la méthode delitem :")   # la méthode spéciale delitem permet de supprimer clé/valeur grace à del
 myprint(fruits)
+
+print(fruits)
+print("items ci dessous :")
